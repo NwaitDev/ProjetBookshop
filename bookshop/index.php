@@ -90,6 +90,8 @@ function eml_aff_section_livres($num, $tLivres) {
     }
     echo '</section>';
 }
+
+//test je suis un commentaire
 /**
  * Fonction qui interroge la base de donnée pour renseigner les 4 livre les plus vendus ou les 4 derniers parus
  * @param $type 1 si on veut les livres les plus vendus, 2 si on veut les plus récents
