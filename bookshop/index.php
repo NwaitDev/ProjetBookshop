@@ -18,7 +18,7 @@ em_aff_pied();
 
 em_aff_fin('main');
 
-
+//Never gonna give you up
 
 // ----------  Fonctions locales au script ----------- //
 
