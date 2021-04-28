@@ -98,6 +98,7 @@ function eml_aff_section_livres($num, $tLivres) {
  * @return array un tableau de 4 array('id' => ID, 'auteurs' => array(array('nom'=>nom, 'prenom'=>prenom) ...), 'titre'=>titre)
  */
 function ng_get_livre($type=0){
+    // cette fonction ne marche pas bien
     $livre = array('id' => null,'auteurs' => array(), 'titre' => null );
     if($type==1){
         $query = 
