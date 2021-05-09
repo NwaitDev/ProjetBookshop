@@ -53,6 +53,8 @@ em_aff_debut('BookShop | Recherche', '../styles/bookshop.css', 'main');
 
 em_aff_enseigne_entete();
 
+ng_localtabs_update(TRUE);
+
 eml_aff_contenu($recherche, $erreurs);
 
 em_aff_pied();
@@ -168,10 +170,10 @@ function eml_aff_livre($livre) {
     $auteurs = $livre['auteurs'];
     $livre = em_html_proteger_sortie($livre);
     echo 
-        '<article class="arRecherche">', 
-            // TODO : à modifier pour le projet  
-            '<a class="addToCart" href="#" title="Ajouter au panier"></a>',
-            '<a class="addToWishlist" href="#" title="Ajouter à la liste de cadeaux"></a>',
+        '<article class="arRecherche">','<form action="" method="POST">',
+            '<input class="addToCart" title="ajouter au panier" type="submit" name="addToCart" value="">',
+            '<input name="valeurID" type="hidden" value="',$livre['id'],'">',
+            '<input type="submit" class="addToWishlist" title="Ajouter à la liste de cadeaux" name="addToWhishList" value=""></form>',
             '<a href="details.php?article=', $livre['id'], '" title="Voir détails"><img src="../images/livres/', $livre['id'], '_mini.jpg" alt="', 
             $livre['titre'],'"></a>',
             '<h5>', $livre['titre'], '</h5>',

@@ -146,4 +146,48 @@ function em_session_exit($page = '../index.php') {
     exit();
 }
 
+/**
+ * Met à jour les variables de session relatives au panier et à la wishlist
+ * @param boolean $DEBUG = TRUE permet :
+ * 1) d'afficher le contenu du panier et de la wishlist
+ * 2) d'ajouter des boutons pour vider la wishlist et le panier
+ * 3) d'afficher le dernier article enregistré ($_POST)
+ */
+function ng_localtabs_update($DEBUG = FALSE){
+    if(array_key_exists('addToCart',$_POST)){
+        if (!isset( $_SESSION['cart'])) {
+            $_SESSION['cart']=array();
+        }
+        $test= $_POST['valeurID'];
+        $_SESSION['cart'][]=$test;
+    }
+    if(array_key_exists('addToWhishList',$_POST)){
+        if (!isset($_SESSION['wish'])) {
+            $_SESSION['wish']=array();
+        }
+        $test= $_POST['valeurID'];
+        $_SESSION['wish'][]=$test;
+    }
+    if ($DEBUG) {
+        if(array_key_exists('cartreset',$_POST)){
+            $_SESSION['cart']=array();
+        }
+        if(array_key_exists('wishreset',$_POST)){
+            $_SESSION['wish']=array();
+        }
+        ////////////////////
+        echo '<p>panier : </p>';
+        var_dump($_SESSION['cart']);
+        echo '<p>wishlist : </p>';
+        var_dump($_SESSION['wish']);
+        echo '<form action="" method="POST">',
+            '<input title="Reset_Cart" type="submit" name="cartreset" value="Réinitialiser le panier">',
+            '<input title="Reset_Wishlist" type="submit" name="wishreset" value="Réinitialiser la wishlist">',
+            '</form>';
+        var_dump($_POST);
+        //////////////////*/
+    }
+
+}
+
 ?>
