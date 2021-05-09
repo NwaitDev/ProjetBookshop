@@ -3,19 +3,87 @@
    License: none (public domain)
 */
 
-html, body, div, span, applet, object, iframe,
-h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-a, abbr, acronym, address, big, cite, code,
-del, dfn, em, img, ins, kbd, q, s, samp,
-small, strike, strong, sub, sup, tt, var,
-b, u, i, center,
-dl, dt, dd, ol, ul, li,
-fieldset, form, label, legend,
-table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed, 
-figure, figcaption, footer, header, hgroup, 
-menu, nav, output, ruby, section, summary,
-time, mark, audio, video {
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
     margin: 0;
     padding: 0;
     border: 0;
@@ -23,25 +91,46 @@ time, mark, audio, video {
     font: inherit;
     vertical-align: baseline;
 }
+
+
 /* HTML5 display-role reset for older browsers */
-article, aside, details, figcaption, figure, 
-footer, header, hgroup, menu, nav, section {
+
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
     display: block;
 }
+
 body {
     line-height: 1;
 }
-ol, ul {
+
+ol,
+ul {
     list-style: none;
 }
-blockquote, q {
+
+blockquote,
+q {
     quotes: none;
 }
-blockquote:before, blockquote:after,
-q:before, q:after {
+
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
     content: '';
     content: none;
 }
+
 table {
     border-collapse: collapse;
     border-spacing: 0;
@@ -57,6 +146,7 @@ body {
     color: #404040;
     background: #9ac5e7 url(../images/fond.jpg) repeat;
 }
+
 main {
     position: relative;
     background-color: #FFFFFF;
@@ -66,112 +156,143 @@ main {
     text-align: justify;
 }
 
-h1, h2, h3 {
+h1,
+h2,
+h3 {
     font-weight: bold;
     margin: 1em 0;
 }
-h1, h2 {
+
+h1,
+h2 {
     padding-left: 0.5em;
 }
+
 h1 {
     font-size: 21px;
 }
+
 h2 {
     font-size: 18px;
     border-bottom: 2px solid #FF9B37;
 }
+
 h3 {
     font-size: 15px;
     margin-left: 1em;
 }
+
 h5 {
     font-weight: bold;
 }
-p { 
+
+p {
     margin: 1em;
 }
-strong { 
+
+strong {
     font-weight: bold;
 }
+
 a {
     text-decoration: none;
     color: #3c96f1;
 }
-a:hover { 
+
+a:hover {
     text-decoration: underline;
 }
+
 .lienExterne:hover {
     background: url(../images/lien_externe.gif) no-repeat right;
     padding-right: 20px;
 }
+
 .clear {
     clear: both;
 }
+
 .font6 {
     font-size: 6px;
 }
+
 ul {
     margin: 0em 1em 1em 3em;
 }
+
 li {
     background: url(../images/puce.png) no-repeat;
     padding-left: 16px;
 }
 
+
 /** Listes générales **/
+
 nav {
     margin: 0 0 2em 1em;
 }
+
 nav ul {
     margin: 0;
-}   
+}
+
 nav ul ul {
     margin-left: 3em;
 }
+
 nav li {
     margin: 0.5em 0;
 }
 
+
 /**********************************************************
                     bloc de 6 images
 **********************************************************/
+
 #bcCompo {
     position: relative;
     height: 350px;
 }
-#bcCompo img{
+
+#bcCompo img {
     position: absolute;
 }
+
 img[src*="lecteur"] {
     width: 103px;
     height: 128px;
     top: 125px;
     left: 350px;
 }
+
 img[src*="watchmen"] {
     width: 130px;
     height: 198px;
     top: 20px;
     left: 80px;
 }
+
 img[src*="PHP4dummies"] {
     width: 120px;
     height: 177px;
     left: 560px;
     top: 40px;
 }
+
 img[src*="H2G2"] {
     width: 100px;
     height: 165px;
     left: 240px;
     top: 120px;
 }
+
 img[src*="TWD"] {
     width: 100px;
     height: 154px;
     top: 200px;
     left: 430px;
 }
+
 img[src*="1984"] {
     width: 100px;
     height: 160px;
@@ -179,9 +300,11 @@ img[src*="1984"] {
     left: 370px;
 }
 
+
 /**********************************************************
         positionnement des 3 images flottantes
 **********************************************************/
+
 img[src*="paiement_securise"] {
     float: right;
     width: 112px;
@@ -189,6 +312,7 @@ img[src*="paiement_securise"] {
     margin-left: 10px;
     margin-right: 10px;
 }
+
 img[src*="livraison"] {
     width: 100px;
     height: 86px;
@@ -196,6 +320,7 @@ img[src*="livraison"] {
     margin-right: 10px;
     margin-left: 10px;
 }
+
 img[src*="cadeau_souris"] {
     float: right;
     width: 140px;
@@ -210,6 +335,7 @@ img[src*="cadeau_souris"] {
 /**********************************************************
             Enseigne avec les liens des réseaux
 **********************************************************/
+
 aside {
     position: fixed;
     margin-top: 0px;
@@ -218,35 +344,42 @@ aside {
     width: 200px;
     background: url(../images/enseigne.png) no-repeat;
 }
+
 aside a {
     width: 32px;
     height: 32px;
     float: left;
 }
+
 a[href*="facebook"] {
     background: url(../images/rezosociaux.jpg) no-repeat 0px 0px;
     margin-top: 80px;
     margin-left: 52px;
 }
-a[href*="twitter"]  {
+
+a[href*="twitter"] {
     background: url(../images/rezosociaux.jpg) no-repeat -76px 0px;
     margin-top: 80px;
     margin-left: 5px;
 }
-a[href*="google"]  {
+
+a[href*="google"] {
     background: url(../images/rezosociaux.jpg) no-repeat -38px 0px;
     margin-top: 5px;
     margin-left: 52px;
 }
-a[href*="pinterest"]  {
+
+a[href*="pinterest"] {
     background: url(../images/rezosociaux.jpg) no-repeat -113px 0px;
     margin-top: 5px;
     margin-left: 5px;
 }
 
+
 /**********************************************************
                             Entête
 **********************************************************/
+
 header {
     position: relative;
     background-image: url(../images/entete.jpg);
@@ -256,6 +389,7 @@ header {
     padding: 0;
     margin: 0;
 }
+
 header nav {
     position: absolute;
     width: 422px;
@@ -264,79 +398,100 @@ header nav {
     left: 20px;
     margin: 0;
 }
-header > img[src*="soustitre"] {
+
+header>img[src*="soustitre"] {
     position: absolute;
     width: 364px;
     height: 50px;
     bottom: 0;
     right: 0;
 }
+
 header nav a[href*="index"] {
     display: block;
     height: 100%;
     background: transparent url(../images/logo.png) no-repeat;
 }
+
 header nav:hover a:not(:first-child) {
     display: block;
 }
+
 header nav a:not(:first-child) {
     position: absolute;
     display: none;
     height: 55px;
     width: 55px;
 }
-header nav a[href*="recherche.php"]  {
+
+header nav a[href*="recherche.php"] {
     background: url(../images/icon-search.png) no-repeat;
 }
+
 header nav a[href*="recherche.php"]:hover {
     background: url(../images/icon-search-hover.png) no-repeat;
 }
+
 header nav a[href*="panier.php"] {
     background: url(../images/icon-cart.png) no-repeat;
 }
+
 header nav a[href*="panier.php"]:hover {
     background: url(../images/icon-cart-hover.png) no-repeat;
 }
+
 header nav a[href*="liste.php"] {
     background: url(../images/icon-list.png) no-repeat;
 }
+
 header nav a[href*="liste.php"]:hover {
     background: url(../images/icon-list-hover.png) no-repeat;
 }
+
 header nav a[href*="compte.php"] {
     background: url(../images/icon-account.png) no-repeat;
 }
+
 header nav a[href*="compte.php"]:hover {
     background: url(../images/icon-account-hover.png) no-repeat;
 }
+
 header nav a[href*="deconnexion.php"] {
     background: url(../images/icon-logout.png) no-repeat;
 }
+
 header nav a[href*="deconnexion.php"]:hover {
     background: url(../images/icon-logout-hover.png) no-repeat;
 }
+
 header nav a[href*="login.php"] {
     background: url(../images/icon-login.png) no-repeat;
 }
+
 header nav a[href*="login.php"]:hover {
     background: url(../images/icon-login-hover.png) no-repeat;
 }
+
 header a.pos1 {
     top: 120px;
     left: -10px;
 }
+
 header a.pos2 {
     top: 130px;
     left: 50px;
 }
+
 header a.pos3 {
     top: 120px;
     left: 110px;
 }
+
 header a.pos4 {
     top: 125px;
     left: 170px;
 }
+
 header a.pos5 {
     top: 125px;
     left: 270px;
@@ -346,7 +501,9 @@ header a.pos5 {
 /**********************************************************
                         Articles
 **********************************************************/
-figure {            /* utilisé dans index.php */
+
+figure {
+    /* utilisé dans index.php */
     display: inline-block;
     width: 195px;
     height: 230px;
@@ -354,14 +511,21 @@ figure {            /* utilisé dans index.php */
     vertical-align: top;
     position: relative;
 }
+
 figure img {
     width: auto;
     height: 160px;
     border: solid 1px #000;
 }
-figure:hover .addToCart, figure:hover .addToWishlist, article:hover .addToCart, article:hover .addToWishlist{
+
+figure:hover .addToCart,
+figure:hover .addToWishlist,
+article:hover .addToCart,
+article:hover .addToWishlist {
     visibility: visible;
+    cursor: pointer;
 }
+
 .addToCart {
     position: absolute;
     visibility: hidden;
@@ -371,6 +535,7 @@ figure:hover .addToCart, figure:hover .addToWishlist, article:hover .addToCart, 
     height: 25px;
     background: url(../images/btnAddToCart.png) no-repeat;
 }
+
 .addToWishlist {
     position: absolute;
     visibility: hidden;
@@ -380,35 +545,44 @@ figure:hover .addToCart, figure:hover .addToWishlist, article:hover .addToCart, 
     height: 40px;
     background: url(../images/btnAddToWishlist.png) no-repeat;
 }
-article.arRecherche {           /* utilisé dans recherche.php */
+
+article.arRecherche {
+    /* utilisé dans recherche.php */
     position: relative;
-    margin: 30px 10px 0 10px;	
+    margin: 30px 10px 0 10px;
     padding: 10px;
     border: solid 2px transparent;
 }
+
 article.arRecherche:hover {
-    border-color: #00A000; 
+    border-color: #00A000;
     background: #FFFFE0;
 }
-article.arRecherche img{
-    float: left; 
-    margin: 0 10px 10px 0; 
-    border: solid 1px #000; 
-    height: 100px; 
+
+article.arRecherche img {
+    float: left;
+    margin: 0 10px 10px 0;
+    border: solid 1px #000;
+    height: 100px;
 }
-article.arRecherche .addToCart, article.arRecherche .addToWishlist{
+
+article.arRecherche .addToCart,
+article.arRecherche .addToWishlist {
     right: 10px;
 }
+
 
 /**********************************************************
                     Formulaires
 **********************************************************/
 
-form input[type=text], form input[type=email], form input[type=password] {
+form input[type=text],
+form input[type=email],
+form input[type=password] {
     width: 220px;
 }
 
-form p{
+form p {
     text-align: center;
 }
 
@@ -416,12 +590,12 @@ form table {
     margin: 15px auto;
 }
 
-form select{
-    margin: 0 2px;   
+form select {
+    margin: 0 2px;
 }
 
 form table td {
-	vertical-align: middle;
+    vertical-align: middle;
     padding: 7px;
 }
 
@@ -429,37 +603,48 @@ form td:first-child {
     text-align: right;
 }
 
-form tr:last-child td[colspan]{
+form tr:last-child td[colspan] {
     text-align: center;
 }
 
-input[type=submit], input[type=reset] {
+td input[type=submit],
+td input[type=reset] {
     margin: 0 4px;
     background: transparent url(../images/bouton.png) no-repeat;
     height: 26px;
     width: 102px;
     text-align: center;
     color: #FFF;
-    border: none;	
+    border: none;
     font-weight: bold;
     cursor: pointer;
 }
-.error{
+
+.error {
     border: solid 2px #A00000;
     color: #A00000;
-    font-weight: bold;	
+    font-weight: bold;
     padding: 5px;
     margin: 10px 20px;
 }
 
+form>input[type=submit].addToCart,
+form>input[type=submit].addToWishlist {
+    background-color: transparent;
+    border: none;
+}
+
+
 /**********************************************************
                         Pied de page
 **********************************************************/
+
 footer {
     margin: 2em 0 0 0;
     padding-top: 10px;
     text-align: center;
     font-size: 10px;
 }
+
 
 /*______________ FIN DE LA FEUILLE DE STYLES ______________________*/

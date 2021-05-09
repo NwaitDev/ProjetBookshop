@@ -3,6 +3,26 @@
 ob_start(); //démarre la bufferisation
 session_start();
 
+if(array_key_exists('addToCart',$_POST)){
+    if (!isset( $_SESSION['cart'])) {
+        $_SESSION['cart']=array();
+    }
+    $test= $_POST['valeurID'];
+    $_SESSION['cart'][]=$test;
+}
+if(array_key_exists('addToWhishList',$_POST)){
+    if (!isset( $_SESSION['wish'])) {
+        $_SESSION['wish']=array();
+    }
+    $test= $_POST['valeurID'];
+    $_SESSION['wish'][]=$test;
+}
+if(array_key_exists('cartreset',$_POST)){
+    $_SESSION['cart']=array();
+}
+if(array_key_exists('wishreset',$_POST)){
+    $_SESSION['wish']=array();
+}
 require_once './php/bibli_generale.php';
 require_once ('./php/bibli_bookshop.php');
 
@@ -14,11 +34,22 @@ em_aff_enseigne_entete('./');
 
 eml_aff_contenu();
 
+////////////////////
+// à n'utiliser que pour le débugage
+echo '<p>panier</p>';
+var_dump($_SESSION['cart']);
+echo '<p>wishlist</p>';
+var_dump($_SESSION['wish']);
+echo '<form action="index.php" method="POST">',
+        '<input title="Reset_Cart" type="submit" name="cartreset" value="Réinitialiser le panier">',
+        '<input title="Reset_Wishlist" type="submit" name="wishreset" value="Réinitialiser la wishlist">',
+        '</form>';
+var_dump($_POST);
+//////////////////*/
+
 em_aff_pied();
 
 em_aff_fin('main');
-
-//Never gonna give you up
 
 // ----------  Fonctions locales au script ----------- //
 
@@ -35,12 +66,12 @@ function eml_aff_contenu() {
         '<p>Nouveau venu sur BookShop ? Consultez notre <a href="./php/presentation.php">page de présentation</a> !</p>';
     
         
-    $derniersAjouts = ng_get_livre(2);
+    $derniersAjouts = ng_get_livre(1);
 
     eml_aff_section_livres(1, $derniersAjouts);
     
     
-    $meilleursVentes = ng_get_livre(1);
+    $meilleursVentes = ng_get_livre(2);
     
     eml_aff_section_livres(2, $meilleursVentes);    
 }
@@ -66,10 +97,12 @@ function eml_aff_section_livres($num, $tLivres) {
 
     foreach ($tLivres as $livre) {
         echo 
-            '<figure>',
-                // TODO : à modifier pour le projet  
-                '<a class="addToCart" href="#" title="Ajouter au panier"></a>',
-                '<a class="addToWishlist" href="#" title="Ajouter à la liste de cadeaux"></a>',
+            '<figure>', 
+                '<form action="index.php" method="POST">
+                <input class="addToCart" title="ajouter au panier" type="submit" name="addToCart" value="">
+                <input name="valeurID" type="hidden" value="',$livre['id'],'">
+                <input type="submit" class="addToWishlist" title="Ajouter à la liste de cadeaux" name="addToWhishList" value="">
+                </form>',
                 '<a href="php/details.php?article=', $livre['id'], '" title="Voir détails"><img src="./images/livres/', 
                 $livre['id'], '_mini.jpg" alt="', $livre['titre'],'"></a>',
                 '<figcaption>';
@@ -92,51 +125,13 @@ function eml_aff_section_livres($num, $tLivres) {
 }
 /**
  * Fonction qui interroge la base de donnée pour renseigner les 4 livre les plus vendus ou les 4 derniers parus
- * @param $type 1 si on veut les livres les plus vendus, 2 si on veut les plus récents
+ * @param $type 2 si on veut les livres les plus vendus, 1 si on veut les plus récents
  * @return array un tableau de 4 array('id' => ID, 'auteurs' => array(array('nom'=>nom, 'prenom'=>prenom) ...), 'titre'=>titre)
  */
 function ng_get_livre($type=0){
-    // cette fonction ne marche pas bien
+    
     $livre = array('id' => null,'auteurs' => array(), 'titre' => null );
     if($type==1){
-        $query = 
-        'SELECT     liID, nomAuteur, prenomAuteur, liTitre
-        FROM        ,livres LEFT OUTER JOIN compo_commande ON liID = ccIDLivre
-        GROUP BY    liID
-        ORDER BY    SUM(ccQuantite) DESC
-        LIMIT       0, 4';
-
-        $co = em_bd_connecter();
-        $res = mysqli_query($co,$query) or em_bd_erreur($co,$query);
-        $popularBooks = array();
-        $lastID = -1;
-        $nbbooks=0;
-        while ($t = mysqli_fetch_assoc($res)) {
-            if ($t['liID'] != $lastID) {
-                if ($lastID!=-1) {
-                    ++$nbbooks;
-                    if ($nbbooks==5) {
-                        break;
-                    }
-                    $popularBooks[]=$livre;
-                }
-                
-                $lastID = $t['liID'];
-                $livre = array( 'id' => $t['liID'], 
-                                'titre' => $t['liTitre'],
-                                'auteurs' => array(array('prenom' => $t['auPrenom'], 'nom' => $t['auNom']))
-                            );
-            }
-            else {
-                $livre['auteurs'][] = array('prenom' => $t['auPrenom'], 'nom' => $t['auNom']);
-            }       
-        }
-        // libération des ressources
-        mysqli_free_result($res);
-        mysqli_close($co);
-        return $popularBooks;
-    }
-    if($type==2){
         $query = 
         'SELECT liID,auNom,auPrenom,liTitre 
         FROM livres,aut_livre,auteurs 
@@ -175,6 +170,45 @@ function ng_get_livre($type=0){
         mysqli_close($co);
         return $newestBooks;
     }
+
+    if($type==2){
+        $query = 
+        'SELECT     liID, auNom, auPrenom, liTitre
+        FROM        livres LEFT OUTER JOIN compo_commande ON liID = ccIDLivre, aut_Livre, auteurs
+        WHERE       al_IDAuteur = auID AND al_IDLivre=liID
+        GROUP BY    liID, auID
+        ORDER BY    SUM(ccQuantite) DESC';
+
+        $co = em_bd_connecter();
+        $res = mysqli_query($co,$query) or em_bd_erreur($co,$query);
+        $popularBooks = array();
+        $lastID = -1;
+        $nbbooks=0;
+        while ($t = mysqli_fetch_assoc($res)) {
+            if ($t['liID'] != $lastID) {
+                if ($lastID!=-1) {
+                    ++$nbbooks;
+                    if ($nbbooks==5) {
+                        break;
+                    }
+                    $popularBooks[]=$livre;
+                }
+                
+                $lastID = $t['liID'];
+                $livre = array( 'id' => $t['liID'], 
+                                'titre' => $t['liTitre'],
+                                'auteurs' => array(array('prenom' => $t['auPrenom'], 'nom' => $t['auNom']))
+                            );
+            }
+            else {
+                $livre['auteurs'][] = array('prenom' => $t['auPrenom'], 'nom' => $t['auNom']);
+            }       
+        }
+        // libération des ressources
+        mysqli_free_result($res);
+        mysqli_close($co);
+        return $popularBooks;
+    }
     return array(
         array(  'id'      => 42, 
                 'auteurs' => array( array('prenom' => 'George', 'nom' => 'Orwell')), 
@@ -193,7 +227,6 @@ function ng_get_livre($type=0){
               ); 
 }
 
-// Hello ceci est un commentaire
-//modif 2
+
 
 ?>
