@@ -3,26 +3,7 @@
 ob_start(); //démarre la bufferisation
 session_start();
 
-if(array_key_exists('addToCart',$_POST)){
-    if (!isset( $_SESSION['cart'])) {
-        $_SESSION['cart']=array();
-    }
-    $test= $_POST['valeurID'];
-    $_SESSION['cart'][]=$test;
-}
-if(array_key_exists('addToWhishList',$_POST)){
-    if (!isset( $_SESSION['wish'])) {
-        $_SESSION['wish']=array();
-    }
-    $test= $_POST['valeurID'];
-    $_SESSION['wish'][]=$test;
-}
-if(array_key_exists('cartreset',$_POST)){
-    $_SESSION['cart']=array();
-}
-if(array_key_exists('wishreset',$_POST)){
-    $_SESSION['wish']=array();
-}
+
 require_once './php/bibli_generale.php';
 require_once ('./php/bibli_bookshop.php');
 
@@ -34,18 +15,7 @@ em_aff_enseigne_entete('./');
 
 eml_aff_contenu();
 
-////////////////////
-// à n'utiliser que pour le débugage
-echo '<p>panier</p>';
-var_dump($_SESSION['cart']);
-echo '<p>wishlist</p>';
-var_dump($_SESSION['wish']);
-echo '<form action="index.php" method="POST">',
-        '<input title="Reset_Cart" type="submit" name="cartreset" value="Réinitialiser le panier">',
-        '<input title="Reset_Wishlist" type="submit" name="wishreset" value="Réinitialiser la wishlist">',
-        '</form>';
-var_dump($_POST);
-//////////////////*/
+ng_localtabs_update();
 
 em_aff_pied();
 
@@ -76,6 +46,49 @@ function eml_aff_contenu() {
     eml_aff_section_livres(2, $meilleursVentes);    
 }
 
+/**
+ * Met à jour les variables de session relatives au panier et à la wishlist
+ * @param boolean $DEBUG = TRUE permet :
+ * 1) d'afficher le contenu du panier et de la wishlist
+ * 2) d'ajouter des boutons pour vider la wishlist et le panier
+ * 3) d'afficher le dernier article enregistré ($_POST)
+ */
+function ng_localtabs_update($DEBUG = FALSE){
+    if(array_key_exists('addToCart',$_POST)){
+        if (!isset( $_SESSION['cart'])) {
+            $_SESSION['cart']=array();
+        }
+        $test= $_POST['valeurID'];
+        $_SESSION['cart'][]=$test;
+    }
+    if(array_key_exists('addToWhishList',$_POST)){
+        if (!isset( $_SESSION['wish'])) {
+            $_SESSION['wish']=array();
+        }
+        $test= $_POST['valeurID'];
+        $_SESSION['wish'][]=$test;
+    }
+    if ($DEBUG) {
+        if(array_key_exists('cartreset',$_POST)){
+            $_SESSION['cart']=array();
+        }
+        if(array_key_exists('wishreset',$_POST)){
+            $_SESSION['wish']=array();
+        }
+        ////////////////////
+        echo '<p>panier : </p>';
+        var_dump($_SESSION['cart']);
+        echo '<p>wishlist : </p>';
+        var_dump($_SESSION['wish']);
+        echo '<form action="index.php" method="POST">',
+            '<input title="Reset_Cart" type="submit" name="cartreset" value="Réinitialiser le panier">',
+            '<input title="Reset_Wishlist" type="submit" name="wishreset" value="Réinitialiser la wishlist">',
+            '</form>';
+        var_dump($_POST);
+        //////////////////*/
+    }
+    
+}
 
 /** 
  *  Affichage d'une section de livres
