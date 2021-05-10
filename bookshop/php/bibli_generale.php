@@ -409,4 +409,42 @@ function em_aff_ligne_input($libelle, $attributs = array(), $prefix_id = 'text')
     echo '></td></tr>';
 }
 
+/**
+ * Affiche une barre de séléction de page
+ * 
+ * @param int $nbPages      Le nombre de pages total
+ * @param int $current      Le numéro de la page actuellement affichée
+ * @param int $range        Le nombre de pages à proposer de rejoindre avant et après la page courante
+ */
+function ng_page_bar($nbPages, $current,$range){
+    echo '<p class="pagebar"> Page : ';
+    $addr =  $_SERVER['PHP_SELF'].'?';
+        foreach ($_GET as $key => $value) {
+            if($key=='page'){
+                continue;
+            }
+            $addr.=$key.'='.$value.'&';
+        }
+    if($current>1){
+        echo '<a href="'.$addr.'page='.($current-1).'"> << </a>';
+    }
+    for ($i=$current-$range; $i<$current+$range  ; ++$i) { 
+        if($i<1){
+            continue;
+        }
+        if($i>$nbPages+1){
+            break;
+        }
+        if($i==$current){
+            echo $i.' ';
+        }else{
+            echo '<a href="',$addr.'page='.$i,'">',$i,'</a> ';
+        }
+    }
+    if($current<$nbPages){
+        echo '<a href="'.$addr.'page='.($current+1).'"> >> </a>';
+    }
+    echo '</p>';
+}
+
 ?>

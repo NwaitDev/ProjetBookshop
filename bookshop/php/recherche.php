@@ -23,9 +23,9 @@ $erreurs = array();
 
 // critères de recherche
 $recherche = array('type' => 'auteur', 'quoi' => '');
-
+$pageNum = 1;
 if ($_GET){ // s'il y a des paramètres dans l'URL
-    if (! em_parametres_controle('get', array('type', 'quoi'))){
+    if (! em_parametres_controle('get', array('type', 'quoi'),array('page'))){
         $erreurs[] = 'L\'URL doit être de la forme "recherche.php?type=auteur&quoi=Moore".';
     }
     else{
@@ -42,6 +42,13 @@ if ($_GET){ // s'il y a des paramètres dans l'URL
         if ($l1 != mb_strlen(strip_tags($recherche['quoi']), 'UTF-8')){
             $erreurs[] = 'Le critère de recherche ne doit pas contenir de tags HTML.';
         }
+        if(array_key_exists('page',$_GET)){
+            if(is_numeric($_GET['page'])){
+                $pageNum = $_GET['page'];
+            }else{
+                $erreurs[]= 'le critère page doit être un nombre entier';
+            }
+        }
     }
 }
 
@@ -53,10 +60,11 @@ em_aff_debut('BookShop | Recherche', '../styles/bookshop.css', 'main');
 
 em_aff_enseigne_entete();
 
-ng_localtabs_update(TRUE);
+ng_localtabs_update();
 
-eml_aff_contenu($recherche, $erreurs);
+$nbPages = ng_aff_contenu($recherche, $erreurs, $pageNum);
 
+ng_page_bar($nbPages,isset($_GET['page']) ? $_GET['page'] : 1, 5);
 em_aff_pied();
 
 em_aff_fin('main');
@@ -72,8 +80,9 @@ ob_end_flush();
  *
  * @param array  $recherche     critères de recherche (type et quoi)
  * @param array  $erreurs       erreurs détectées dans l'URL
+ * @return int   $nbPages         nombre de pages existantes pour la recherche;
  */
-function eml_aff_contenu($recherche, $erreurs) {
+function ng_aff_contenu($recherche, $erreurs, $pageNum = 1) {
     
     echo '<h3>Recherche par une partie du nom d\'un auteur ou du titre</h3>'; 
     
@@ -98,9 +107,9 @@ function eml_aff_contenu($recherche, $erreurs) {
                 echo '<br>', $erreurs[$i];
         }
         echo '</p>';
-        return; // ===> Fin de la fonction
+        return 0; // ===> Fin de la fonction
     }
-
+    $count=0;
     if ($recherche['quoi']){ //si recherche à faire en base de données
     
         // ouverture de la connexion, requête
@@ -124,12 +133,13 @@ function eml_aff_contenu($recherche, $erreurs) {
 
         $res = mysqli_query($bd, $sql) or em_bd_erreur($bd,$sql);
         
-        
+        $livres = [];
+        $nbPages=0;
         $lastID = -1;
         while ($t = mysqli_fetch_assoc($res)) {
             if ($t['liID'] != $lastID) {
                 if ($lastID != -1) {
-                    eml_aff_livre($livre); 
+                    $livres[$count++]=$livre; 
                 }
                 $lastID = $t['liID'];
                 $livre = array( 'id' => $t['liID'], 
@@ -151,12 +161,28 @@ function eml_aff_contenu($recherche, $erreurs) {
         mysqli_close($bd);
         
         if ($lastID != -1) {
-            eml_aff_livre($livre); 
+            $livres[$count++]=$livre; 
         }
         else{
             echo '<p>Aucun livre trouvé</p>';
         }
+
+        $nbPages = $count/3;
+        if($count!=$nbPages*3){
+            $nbPages++;
+        }
+        if($pageNum>$nbPages){
+            $pageNum = $nbPages;
+        }
+        if ($pageNum<1) {
+            $pageNum = 1;
+        }
+        $maxbooks = $count<($pageNum-1)*3+3 ? $count : ($pageNum-1)*3+3;
+        for ($i=($pageNum-1)*3; $i<$maxbooks ; $i++) { 
+            eml_aff_livre($livres[$i]);
+        }
     }
+    return $nbPages;
 }
 
 /**
@@ -170,7 +196,8 @@ function eml_aff_livre($livre) {
     $auteurs = $livre['auteurs'];
     $livre = em_html_proteger_sortie($livre);
     echo 
-        '<article class="arRecherche">','<form action="" method="POST">',
+        '<article class="arRecherche">',
+            '<form action="" method="POST">',
             '<input class="addToCart" title="ajouter au panier" type="submit" name="addToCart" value="">',
             '<input name="valeurID" type="hidden" value="',$livre['id'],'">',
             '<input type="submit" class="addToWishlist" title="Ajouter à la liste de cadeaux" name="addToWhishList" value=""></form>',
