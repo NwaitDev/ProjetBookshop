@@ -62,8 +62,8 @@ em_aff_enseigne_entete();
 
 ng_localtabs_update();
 
-$nbPages = ng_aff_contenu($recherche, $erreurs, $pageNum);
-
+ng_aff_contenu($recherche, $erreurs, $pageNum);
+$nbPages = isset($_SESSION['nbpages']) ? $_SESSION['nbpages'] : 1;
 ng_page_bar($nbPages,isset($_GET['page']) ? $_GET['page'] : 1, 5);
 em_aff_pied();
 
@@ -76,11 +76,12 @@ ob_end_flush();
 // ----------  Fonctions locales au script ----------- //
 
 /**
- *  Contenu de la page : formulaire et résultats de la recherche
+ *  Contenu de la page : formulaire et résultats de la recherche, 
+ *  indique dans $_SESSION les derniers critères de recerche utilisés et le tableau des resultats pour vérifier s'il
+ *  est nécessaire de se reconnecter à la BDD pour afficher les resultats
  *
  * @param array  $recherche     critères de recherche (type et quoi)
  * @param array  $erreurs       erreurs détectées dans l'URL
- * @return int   $nbPages         nombre de pages existantes pour la recherche;
  */
 function ng_aff_contenu($recherche, $erreurs, $pageNum = 1) {
     
@@ -107,70 +108,79 @@ function ng_aff_contenu($recherche, $erreurs, $pageNum = 1) {
                 echo '<br>', $erreurs[$i];
         }
         echo '</p>';
-        return 0; // ===> Fin de la fonction
+        return; // ===> Fin de la fonction
     }
     $count=0;
     if ($recherche['quoi']){ //si recherche à faire en base de données
-    
-        // ouverture de la connexion, requête
-        $bd = em_bd_connecter();
-        
-        $q = em_bd_proteger_entree($bd, $recherche['quoi']); 
-        
-        if ($recherche['type'] == 'auteur') {
-            $critere = " WHERE liID in (SELECT al_IDLivre FROM aut_livre INNER JOIN auteurs ON al_IDAuteur = auID WHERE auNom LIKE '%$q%')";
-        } 
-        else {
-            $critere = " WHERE liTitre LIKE '%$q%'";    
-        }
-
-        $sql =  "SELECT liID, liTitre, liPrix, liPages, liISBN13, edNom, edWeb, auNom, auPrenom 
-                FROM livres INNER JOIN editeurs ON liIDEditeur = edID 
-                            INNER JOIN aut_livre ON al_IDLivre = liID 
-                            INNER JOIN auteurs ON al_IDAuteur = auID 
-                $critere
-                ORDER BY liID";
-
-        $res = mysqli_query($bd, $sql) or em_bd_erreur($bd,$sql);
-        
-        $livres = [];
-        $nbPages=0;
-        $lastID = -1;
-        while ($t = mysqli_fetch_assoc($res)) {
-            if ($t['liID'] != $lastID) {
-                if ($lastID != -1) {
-                    $livres[$count++]=$livre; 
-                }
-                $lastID = $t['liID'];
-                $livre = array( 'id' => $t['liID'], 
-                                'titre' => $t['liTitre'],
-                                'edNom' => $t['edNom'],
-                                'edWeb' => $t['edWeb'],
-                                'pages' => $t['liPages'],
-                                'ISBN13' => $t['liISBN13'],
-                                'prix' => $t['liPrix'],
-                                'auteurs' => array(array('prenom' => $t['auPrenom'], 'nom' => $t['auNom']))
-                            );
-            }
+        if (!ng_value_comp($_SESSION,$_GET,['type','quoi'])) {
+            // ouverture de la connexion, requête
+            $_SESSION['type']=$recherche['type'];
+            $_SESSION['quoi']=$recherche['quoi'];
+            $bd = em_bd_connecter();
+            
+            $q = em_bd_proteger_entree($bd, $recherche['quoi']); 
+            
+            if ($recherche['type'] == 'auteur') {
+                $critere = " WHERE liID in (SELECT al_IDLivre FROM aut_livre INNER JOIN auteurs ON al_IDAuteur = auID WHERE auNom LIKE '%$q%')";
+            } 
             else {
-                $livre['auteurs'][] = array('prenom' => $t['auPrenom'], 'nom' => $t['auNom']);
-            }       
-        }
-        // libération des ressources
-        mysqli_free_result($res);
-        mysqli_close($bd);
-        
-        if ($lastID != -1) {
-            $livres[$count++]=$livre; 
-        }
-        else{
-            echo '<p>Aucun livre trouvé</p>';
-        }
+                $critere = " WHERE liTitre LIKE '%$q%'";    
+            }
 
-        $nbPages = $count/3;
+            $sql =  "SELECT liID, liTitre, liPrix, liPages, liISBN13, edNom, edWeb, auNom, auPrenom 
+                    FROM livres INNER JOIN editeurs ON liIDEditeur = edID 
+                                INNER JOIN aut_livre ON al_IDLivre = liID 
+                                INNER JOIN auteurs ON al_IDAuteur = auID 
+                    $critere
+                    ORDER BY liID";
+
+            $res = mysqli_query($bd, $sql) or em_bd_erreur($bd,$sql);
+            
+            $livres = [];
+            $nbPages=0;
+            $lastID = -1;
+            while ($t = mysqli_fetch_assoc($res)) {
+                if ($t['liID'] != $lastID) {
+                    if ($lastID != -1) {
+                        $livres[$count++]=$livre; 
+                    }
+                    $lastID = $t['liID'];
+                    $livre = array( 'id' => $t['liID'], 
+                                    'titre' => $t['liTitre'],
+                                    'edNom' => $t['edNom'],
+                                    'edWeb' => $t['edWeb'],
+                                    'pages' => $t['liPages'],
+                                    'ISBN13' => $t['liISBN13'],
+                                    'prix' => $t['liPrix'],
+                                    'auteurs' => array(array('prenom' => $t['auPrenom'], 'nom' => $t['auNom']))
+                                );
+                }
+                else {
+                    $livre['auteurs'][] = array('prenom' => $t['auPrenom'], 'nom' => $t['auNom']);
+                }       
+            }
+            // libération des ressources
+            mysqli_free_result($res);
+            mysqli_close($bd);
+        
+            if ($lastID != -1) {
+                $livres[$count++]=$livre; 
+                $_SESSION['nblivres']=$count;
+            }
+            $_SESSION['nblivres']=$count;
+            $_SESSION['livres']=$livres;
+        }
+        $livres=$_SESSION['livres'];
+        $count=$_SESSION['nblivres'];
+        if($count == 0){
+            echo '<p>Aucun livre trouvé</p>';
+            return;
+        }
+        $nbPages =(int)($count/3);
         if($count!=$nbPages*3){
             $nbPages++;
         }
+        $_SESSION['nbpages']=$nbPages;
         if($pageNum>$nbPages){
             $pageNum = $nbPages;
         }
@@ -182,7 +192,7 @@ function ng_aff_contenu($recherche, $erreurs, $pageNum = 1) {
             eml_aff_livre($livres[$i]);
         }
     }
-    return $nbPages;
+    
 }
 
 /**

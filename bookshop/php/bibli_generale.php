@@ -432,7 +432,7 @@ function ng_page_bar($nbPages, $current,$range){
         if($i<1){
             continue;
         }
-        if($i>$nbPages+1){
+        if($i>$nbPages){
             break;
         }
         if($i==$current){
@@ -445,6 +445,29 @@ function ng_page_bar($nbPages, $current,$range){
         echo '<a href="'.$addr.'page='.($current+1).'"> >> </a>';
     }
     echo '</p>';
+}
+
+/**
+ *  Vérifie que les valeurs des valeurs d'indexs $keys sont identiques pour chaque tableau
+ *  
+ *  @param array $tab1      premier tableau de données à comparer
+ *  @param array $tab2      second tableau de données à comparer
+ *  @param array $keys      liste des indexs à comparer
+ *  @return bool            true si les tableaux sont identiques aux indexs keys, false sinon
+ */
+function ng_value_comp($tab1, $tab2, $keys){
+    foreach ($keys as $key) {
+        if (isset($tab1[$key]) && isset($tab2[$key])) {
+            if($tab1[$key]!=$tab2[$key]){
+                return false;
+            }else{
+                continue;
+            }
+        }else{
+            return false;
+        }
+    }
+    return true;
 }
 
 ?>
