@@ -64,7 +64,9 @@ ng_localtabs_update();
 
 ng_aff_contenu($recherche, $erreurs, $pageNum);
 $nbPages = isset($_SESSION['nbpages']) ? $_SESSION['nbpages'] : 1;
-ng_page_bar($nbPages,isset($_GET['page']) ? $_GET['page'] : 1, 5);
+if ($_GET) {
+    ng_page_bar($nbPages,isset($_GET['page']) ? $_GET['page'] : 1, 5);
+}
 em_aff_pied();
 
 em_aff_fin('main');

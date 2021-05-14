@@ -526,6 +526,18 @@ article:hover .addToWishlist {
     cursor: pointer;
 }
 
+td>p>input[name="addToCart"] {
+    width: 40px;
+    height: 40px;
+    background: url(../images/btnAddToCart.png) no-repeat;
+}
+
+td>p>input[name="addToWhishList"] {
+    width: 40px;
+    height: 40px;
+    background: url(../images/btnAddToWishlist.png) no-repeat;
+}
+
 .addToCart {
     position: absolute;
     visibility: hidden;
