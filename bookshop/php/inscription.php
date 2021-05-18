@@ -62,8 +62,7 @@ function eml_aff_contenu($err) {
     $mois = isset($_POST['naissance_m']) ? (int)$_POST['naissance_m'] : 1;
     $annee = isset($_POST['naissance_a']) ? (int)$_POST['naissance_a'] : $anneeCourante;
 
-    echo 
-        '<h1>Inscription à BookShop</h1>';
+    echo '<h1>Inscription à BookShop</h1>';
         
     if (count($err) > 0) {
         echo '<p class="error">Votre inscription n\'a pas pu être réalisée à cause des erreurs suivantes : ';
@@ -247,8 +246,9 @@ function eml_traitement_inscription() {
     // libération des ressources
     mysqli_close($bd);
     
-    // redirection vers la page protegee.php
-    header('Location: protegee.php'); //TODO : à modifier dans le projet
+    // redirection vers la page précédente
+    $addr = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '../index.php';
+    header("Location: $addr");
     exit();
 }
     

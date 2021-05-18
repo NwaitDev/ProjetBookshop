@@ -409,4 +409,65 @@ function em_aff_ligne_input($libelle, $attributs = array(), $prefix_id = 'text')
     echo '></td></tr>';
 }
 
+/**
+ * Affiche une barre de séléction de page
+ * 
+ * @param int $nbPages      Le nombre de pages total
+ * @param int $current      Le numéro de la page actuellement affichée
+ * @param int $range        Le nombre de pages à proposer de rejoindre avant et après la page courante
+ */
+function ng_page_bar($nbPages, $current,$range){
+    echo '<p class="pagebar"> Page : ';
+    $addr =  $_SERVER['PHP_SELF'].'?';
+        foreach ($_GET as $key => $value) {
+            if($key=='page'){
+                continue;
+            }
+            $addr.=$key.'='.$value.'&';
+        }
+    if($current>1){
+        echo '<a href="'.$addr.'page='.($current-1).'"> << </a>';
+    }
+    for ($i=$current-$range; $i<$current+$range  ; ++$i) { 
+        if($i<1){
+            continue;
+        }
+        if($i>$nbPages){
+            break;
+        }
+        if($i==$current){
+            echo $i.' ';
+        }else{
+            echo '<a href="',$addr.'page='.$i,'">',$i,'</a> ';
+        }
+    }
+    if($current<$nbPages){
+        echo '<a href="'.$addr.'page='.($current+1).'"> >> </a>';
+    }
+    echo '</p>';
+}
+
+/**
+ *  Vérifie que les valeurs des valeurs d'indexs $keys sont identiques pour chaque tableau
+ *  
+ *  @param array $tab1      premier tableau de données à comparer
+ *  @param array $tab2      second tableau de données à comparer
+ *  @param array $keys      liste des indexs à comparer
+ *  @return bool            true si les tableaux sont identiques aux indexs keys, false sinon
+ */
+function ng_value_comp($tab1, $tab2, $keys){
+    foreach ($keys as $key) {
+        if (isset($tab1[$key]) && isset($tab2[$key])) {
+            if($tab1[$key]!=$tab2[$key]){
+                return false;
+            }else{
+                continue;
+            }
+        }else{
+            return false;
+        }
+    }
+    return true;
+}
+
 ?>
