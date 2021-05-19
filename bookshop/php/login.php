@@ -8,15 +8,19 @@ require_once '../php/bibli_bookshop.php';
 
 error_reporting(E_ALL); // toutes les erreurs sont capturées (utile lors de la phase de développement)
 
-// si utilisateur déjà authentifié, on le redirige vers la page précédente (TODO) ou vers index.php
-if (em_est_authentifie()){
-    header('Location: ../index.php');
-    exit();
+// traitement si soumission du formulaire d'inscription
+$err = isset($_POST['btnConn']) ? ng_traitement_connexion(array()) : array();
+
+// si utilisateur authentifié, on le redirige vers la page précédente ou vers index.php
+if(!em_est_authentifie()){
+    $_SESSION['prev'] = $_SERVER['HTTP_REFERER'];
 }
 
-// traitement si soumission du formulaire d'inscription
-$err = isset($_POST['btnConn']) ? ng_traitement_connexion(array()) : array(); 
-
+$addr = isset($_SESSION['prev']) ? $_SESSION['prev'] : '../index.php';
+if (em_est_authentifie()){
+    header('Location: '.$addr);
+    exit();
+}
 
 em_aff_debut('BookShop | Connexion', '../styles/bookshop.css', 'main');
 
@@ -34,7 +38,8 @@ ob_end_flush();
 /*---------------Fonctions locales au script------------*/
 
 /**
- * 
+ * Affichage du formulaire de connexion et les éventuelles erreurs commises lors de son dernier remplissage
+ * @param array $err le tableau des erreurs détéctées
  */
 function ng_aff_form_conn($err){
     // réaffichage des données soumises en cas d'erreur, sauf les mots de passe
@@ -141,8 +146,7 @@ function ng_traitement_connexion($erreurs){
         return $erreurs;    
     }
     
-    // redirection vers la page précédente
-    $addr = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '../index.php';
+    // redirection vers la page précédente ou vers index.php
     header("Location: $addr");
     exit();
 
