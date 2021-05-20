@@ -8,9 +8,9 @@
 /** Constantes : les paramètres de connexion au serveur MySQL */
 define ('BD_SERVER', 'localhost');
 
-define ('BD_NAME', 'bookshop_db');
-define ('BD_USER', 'bookshop_user');
-define ('BD_PASS', 'bookshop_pass');
+define ('BD_NAME', 'degieux_bookshop');
+define ('BD_USER', 'degieux_u');
+define ('BD_PASS', 'degieux_p');
 
 /*define ('BD_NAME', 'merlet_bookshop');
 define ('BD_USER', 'merlet_u');
@@ -24,6 +24,11 @@ define('LMIN_PASSWORD', 4);
 define('LMAX_PASSWORD', 20);
 
 define('NB_ANNEE_DATE_NAISSANCE', 120);
+
+define('LMAX_VILLE',50);
+define('LMAX_CP',5);
+define('LMAX_ADRESSE',100);
+define('LMAX_PAYS',50);
  
 
 /**
@@ -188,66 +193,6 @@ function ng_localtabs_update($DEBUG = FALSE){
         //////////////////*/
     }
 
-}
-
-/**
- * 
- */
-function ng_get_wishlist($IDclient){
-    $bd = em_bd_connecter();
-    $sql = "SELECT liID, liTitre, liPrix, liPages, liISBN13, edNom, edWeb, auNom, auPrenom 
-            FROM livres INNER JOIN editeurs ON liIDEditeur = edID
-            INNER JOIN aut_livre ON al_IDLivre = liID 
-            INNER JOIN auteurs ON al_IDAuteur = auID 
-            INNER JOIN listes ON liID = listIDLivre
-            WHERE listIDClient = $IDclient
-            ORDER BY liID";
-    $res = mysqli_query($bd, $sql) or em_bd_erreur($bd,$sql);
-            
-    $livres = [];
-    $lastID = -1;
-    while ($t = mysqli_fetch_assoc($res)) {
-        if ($t['liID'] != $lastID) {
-            if ($lastID != -1) {
-                $livres[$count++]=$livre; 
-            }
-            $lastID = $t['liID'];
-            $livre = array( 'id' => $t['liID'], 
-                            'titre' => $t['liTitre'],
-                            'edNom' => $t['edNom'],
-                            'edWeb' => $t['edWeb'],
-                            'pages' => $t['liPages'],
-                            'ISBN13' => $t['liISBN13'],
-                            'prix' => $t['liPrix'],
-                            'auteurs' => array(array('prenom' => $t['auPrenom'], 'nom' => $t['auNom']))
-                    );
-        } else {
-            $livre['auteurs'][] = array('prenom' => $t['auPrenom'], 'nom' => $t['auNom']);
-        }       
-        // libération des ressources
-        mysqli_free_result($res);
-        mysqli_close($bd);
-
-        if ($lastID != -1) {
-            $livres[$count++]=$livre;
-        }
-    }
-    if($count == 0){
-        return FALSE;
-    }
-    return $livres;
-}
-
-/// TODO NATHAN
-function add_to_wishlist($IDClient, $IDLivre){
-    foreach($_SESSION['wishlist'] as $livre){
-        if($livre['liID']==$IDLivre){
-            break;
-        }
-    }
-    if ($_SESSION['wishlist']) {
-        # code...
-    }
 }
 
 ?>
