@@ -190,4 +190,64 @@ function ng_localtabs_update($DEBUG = FALSE){
 
 }
 
+/**
+ * 
+ */
+function ng_get_wishlist($IDclient){
+    $bd = em_bd_connecter();
+    $sql = "SELECT liID, liTitre, liPrix, liPages, liISBN13, edNom, edWeb, auNom, auPrenom 
+            FROM livres INNER JOIN editeurs ON liIDEditeur = edID
+            INNER JOIN aut_livre ON al_IDLivre = liID 
+            INNER JOIN auteurs ON al_IDAuteur = auID 
+            INNER JOIN listes ON liID = listIDLivre
+            WHERE listIDClient = $IDclient
+            ORDER BY liID";
+    $res = mysqli_query($bd, $sql) or em_bd_erreur($bd,$sql);
+            
+    $livres = [];
+    $lastID = -1;
+    while ($t = mysqli_fetch_assoc($res)) {
+        if ($t['liID'] != $lastID) {
+            if ($lastID != -1) {
+                $livres[$count++]=$livre; 
+            }
+            $lastID = $t['liID'];
+            $livre = array( 'id' => $t['liID'], 
+                            'titre' => $t['liTitre'],
+                            'edNom' => $t['edNom'],
+                            'edWeb' => $t['edWeb'],
+                            'pages' => $t['liPages'],
+                            'ISBN13' => $t['liISBN13'],
+                            'prix' => $t['liPrix'],
+                            'auteurs' => array(array('prenom' => $t['auPrenom'], 'nom' => $t['auNom']))
+                    );
+        } else {
+            $livre['auteurs'][] = array('prenom' => $t['auPrenom'], 'nom' => $t['auNom']);
+        }       
+        // libération des ressources
+        mysqli_free_result($res);
+        mysqli_close($bd);
+
+        if ($lastID != -1) {
+            $livres[$count++]=$livre;
+        }
+    }
+    if($count == 0){
+        return FALSE;
+    }
+    return $livres;
+}
+
+/// TODO NATHAN
+function add_to_wishlist($IDClient, $IDLivre){
+    foreach($_SESSION['wishlist'] as $livre){
+        if($livre['liID']==$IDLivre){
+            break;
+        }
+    }
+    if ($_SESSION['wishlist']) {
+        # code...
+    }
+}
+
 ?>
