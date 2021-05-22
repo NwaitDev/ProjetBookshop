@@ -521,6 +521,8 @@ figure img {
 figure:hover .addToCart,
 figure:hover .addToWishlist,
 article:hover .addToCart,
+figure:hover .rmFrom,
+article:hover .rmFrom,
 article:hover .addToWishlist {
     visibility: visible;
     cursor: pointer;
@@ -556,6 +558,14 @@ td>p>input[name="addToWhishList"] {
     width: 40px;
     height: 40px;
     background: url(../images/btnAddToWishlist.png) no-repeat;
+}
+
+.rmFrom {
+    display: inline;
+    visibility: hidden;
+    width: 10px;
+    height: 20px;
+    background: url(../images/btnSupprimer.png) no-repeat;
 }
 
 article.arRecherche {
@@ -645,7 +655,8 @@ td input[type=reset] {
 }
 
 form>input[type=submit].addToCart,
-form>input[type=submit].addToWishlist {
+form>input[type=submit].addToWishlist,
+form input[type=submit].rmFrom {
     background-color: transparent;
     border: none;
 }

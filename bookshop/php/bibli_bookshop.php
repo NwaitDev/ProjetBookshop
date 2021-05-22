@@ -8,7 +8,7 @@
 /** Constantes : les paramètres de connexion au serveur MySQL */
 define ('BD_SERVER', 'localhost');
 
-define ('BD_NAME', 'bookshop');
+define ('BD_NAME', 'degieux_bookshop');
 define ('BD_USER', 'degieux_u');
 define ('BD_PASS', 'degieux_p');
 
@@ -300,7 +300,7 @@ function rm_from_wishlist($IDClient, $IDLivre){
     $is_there = False;
     $tab = ng_get_wishlist($IDClient);
     foreach($tab as $livre){
-        if($livre['liID']==$IDLivre){
+        if($livre['id']==$IDLivre){
             $is_there = TRUE;
             break;
         }
@@ -309,7 +309,6 @@ function rm_from_wishlist($IDClient, $IDLivre){
         $bd = em_bd_connecter();
         $sql = "DELETE FROM listes WHERE listIDLivre = $IDLivre AND listIDClient = $IDClient;";
         $res = mysqli_query($bd,$sql) or em_bd_erreur($bd,$sql);
-        mysqli_free_result($res);
         mysqli_close($bd);
     }
 }
@@ -333,13 +332,22 @@ function ng_aff_livre($livre, $option = 0) {
         echo '<input class="addToCart" title="ajouter au panier" type="submit" name="addToCart" value="">';
     }
     if($option !=1){
-        echo '<input type="submit" class="addToWishlist" title="Ajouter à la liste de cadeaux" name="addToWhishList" value=""></form>';
+        echo '<input type="submit" class="addToWishlist" title="Ajouter à la liste de cadeaux" name="addToWhishList" value="">';
     }
     echo '<input name="valeurID" type="hidden" value="',$livre['id'],'">',
             '<a href="details.php?article=', $livre['id'], '" title="Voir détails"><img src="../images/livres/', $livre['id'], '_mini.jpg" alt="', 
             $livre['titre'],'"></a>',
-            '<h5>', $livre['titre'], '</h5>',
-            'Ecrit par : ';
+            '<h5>', $livre['titre'].' ';
+
+    if($option!=0){
+        if($option!=1){
+            echo '<input class="rmFrom" title="retirer du panier" type="submit" name="rmFromCart" value="">';
+        }
+        if ($option!=2) {
+            echo '<input class="rmFrom" title="retirer de la liste de cadeaux" type="submit" name="rmFromWishList" value="">';
+        }
+    }
+    echo '</h5>Ecrit par : ';
     $i = 0;
     foreach ($auteurs as $auteur) {
         echo $i > 0 ? ', ' : '', '<a href="recherche.php?type=auteur&amp;quoi=', urlencode($auteur['nom']), '">',
