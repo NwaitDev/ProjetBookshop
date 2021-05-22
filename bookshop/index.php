@@ -145,7 +145,7 @@ function ng_get_livre($type=0){
     if($type==2){
         $query = 
         'SELECT     liID, auNom, auPrenom, liTitre
-        FROM        livres LEFT OUTER JOIN compo_commande ON liID = ccIDLivre, aut_Livre, auteurs
+        FROM        livres LEFT OUTER JOIN compo_commande ON liID = ccIDLivre, aut_livre, auteurs
         WHERE       al_IDAuteur = auID AND al_IDLivre=liID
         GROUP BY    liID, auID
         ORDER BY    SUM(ccQuantite) DESC';
