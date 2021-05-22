@@ -33,7 +33,7 @@ $bd = em_bd_connecter();
 - génération du code HTML de la page
 ------------------------------------------------------------------------------*/
 
-em_aff_debut('BookShop | Inscription', '../styles/bookshop.css', 'main');
+em_aff_debut('BookShop | Profil Utilisateur', '../styles/bookshop.css', 'main');
 
 em_aff_enseigne_entete();
 
@@ -61,15 +61,15 @@ function eml_aff_contenu($err, $bd) {
     //affichage des données de l'utilisateur
     $email = $userData['cliEmail'];
     $nomprenom = $userData['cliNomPrenom'];
-    $jour = 1;
-    $mois = 1;
-    $annee = 2020;
+    $jour = $userData['cliDateNaissance']%100;
+    $mois = ($userData['cliDateNaissance']/100)%100;
+    $annee = (int)($userData['cliDateNaissance']/10000);
     $adresse = $userData['cliAdresse'];
     $codepostal = $userData['cliCP'];
     $ville = $userData['cliVille'];
     $pays = $userData['cliPays'];
 
-    echo '<h1>Profile utilisateur</h1>';
+    echo '<h1>Profil utilisateur</h1>';
         
     if (count($err) > 0) {
         echo '<p class="error">Votre inscription n\'a pas pu être réalisée à cause des erreurs suivantes : ';
@@ -80,7 +80,7 @@ function eml_aff_contenu($err, $bd) {
     }
     
     echo    
-        '<p>Pour vous inscrire, merci de fournir les informations suivantes. </p>',
+        '<p>Pour modifier votre compte veuillez remplir ce formulaire : </p>',
         '<form method="post" action="inscription.php">',
             '<table>';
 
@@ -99,7 +99,7 @@ function eml_aff_contenu($err, $bd) {
     echo 
                 '<tr>',
                     '<td colspan="2">',
-                        '<input type="submit" name="btnModifier" value="S\'inscrire">',
+                        '<input type="submit" name="btnModifier" value="Modifier">',
                         '<input type="reset" value="Réinitialiser">', 
                     '</td>',
                 '</tr>',
@@ -129,7 +129,7 @@ function eml_aff_contenu($err, $bd) {
 function eml_traitement_inscription($bd) {
 
     if( !em_parametres_controle('post', array('email', 'nomprenom', 'naissance_j', 'naissance_m', 'naissance_a', 
-                                              'passe1', 'passe2','codepostal','ville','adresse','pays', 'btnModifier'))) {
+                                              'adresse','cp','ville','pays','passe1', 'passe2', 'btnModifier'))) {
         em_session_exit();   
     }
     
@@ -312,18 +312,18 @@ function eml_traitement_inscription($bd) {
     
     $aaaammjj = $annee*10000  + $mois*100 + $jour;
 
-    $adresse = em_bd_protefer_entree($bd,$adresse);
-    $ville = em_bd_protefer_entree($bd,$ville);
-    $codepostal = em_bd_protefer_entree($bd,$codepostal);
-    $pays = em_bd_protefer_entree($bd,$pays);
+    $adresse = em_bd_proteger_entree($bd,$adresse);
+    $ville = em_bd_proteger_entree($bd,$ville);
+    $codepostal = em_bd_proteger_entree($bd,$codepostal);
+    $pays = em_bd_proteger_entree($bd,$pays);
     
     $sql = "UPDATE clients
-            SET cliNomPrenom = '$nomprenom'
-                cliEmail = '$email'
-                cliDateNaissance = '$aaaammjj'
-                cliAdresse = '$adresse'
-                cliVille = '$ville'
-                cliCP = '$codepostal'
+            SET cliNomPrenom = '$nomprenom',
+                cliEmail = '$email',
+                cliDateNaissance = '$aaaammjj',
+                cliAdresse = '$adresse',
+                cliVille = '$ville',
+                cliCP = '$codepostal',
                 cliPays = '$pays'
             WHERE cliID = '$id'";
             

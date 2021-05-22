@@ -8,7 +8,7 @@
 /** Constantes : les paramètres de connexion au serveur MySQL */
 define ('BD_SERVER', 'localhost');
 
-define ('BD_NAME', 'degieux_bookshop');
+define ('BD_NAME', 'bookshop');
 define ('BD_USER', 'degieux_u');
 define ('BD_PASS', 'degieux_p');
 
