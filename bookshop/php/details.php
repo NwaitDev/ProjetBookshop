@@ -20,7 +20,7 @@ em_aff_pied();
 
 em_aff_fin('main');
 
-
+ob_flush();
 
 // ----------  Fonctions locales au script ----------- //
 
