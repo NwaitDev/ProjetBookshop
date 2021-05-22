@@ -82,7 +82,7 @@ function ng_aff_livre_det($livre){
 
     foreach ($livre['auteurs'] as $auteur) {
         echo $i > 0 ? ', ' : '', '<a href="recherche.php?type=auteur&amp;quoi=', urlencode($auteur['nom']), '">',
-        em_html_proteger_sortie($auteur['prenom']), ' ', em_html_proteger_sortie($auteur['nom']) ,'</a>';
+        $auteur['prenom'], ' ', $auteur['nom'],'</a>';
         $i++;
     }
 
