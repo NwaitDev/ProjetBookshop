@@ -15,7 +15,7 @@ em_aff_enseigne_entete('./');
 
 eml_aff_contenu();
 
-ng_localtabs_update();
+check_update();
 
 em_aff_pied();
 
