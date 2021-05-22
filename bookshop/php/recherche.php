@@ -60,9 +60,9 @@ em_aff_debut('BookShop | Recherche', '../styles/bookshop.css', 'main');
 
 em_aff_enseigne_entete();
 
-ng_localtabs_update();
+check_update();
 
-ng_aff_contenu($recherche, $erreurs, $pageNum);
+ng_aff_contenu($recherche, $erreurs, $pageNum, 7);
 $nbPages = isset($_SESSION['nbpages']) ? $_SESSION['nbpages'] : 1;
 if ($_GET) {
     ng_page_bar($nbPages,isset($_GET['page']) ? $_GET['page'] : 1, 5);
@@ -85,7 +85,7 @@ ob_end_flush();
  * @param array  $recherche     critères de recherche (type et quoi)
  * @param array  $erreurs       erreurs détectées dans l'URL
  */
-function ng_aff_contenu($recherche, $erreurs, $pageNum = 1) {
+function ng_aff_contenu($recherche, $erreurs, $pageNum = 1, $pageSize = 3) {
     
     echo '<h3>Recherche par une partie du nom d\'un auteur ou du titre</h3>'; 
     
@@ -178,8 +178,8 @@ function ng_aff_contenu($recherche, $erreurs, $pageNum = 1) {
             echo '<p>Aucun livre trouvé</p>';
             return;
         }
-        $nbPages =(int)($count/3);
-        if($count!=$nbPages*3){
+        $nbPages =(int)($count/$pageSize);
+        if($count!=$nbPages*$pageSize){
             $nbPages++;
         }
         $_SESSION['nbpages']=$nbPages;
@@ -189,8 +189,8 @@ function ng_aff_contenu($recherche, $erreurs, $pageNum = 1) {
         if ($pageNum<1) {
             $pageNum = 1;
         }
-        $maxbooks = $count<($pageNum-1)*3+3 ? $count : ($pageNum-1)*3+3;
-        for ($i=($pageNum-1)*3; $i<$maxbooks ; $i++) { 
+        $maxbooks = $count<($pageNum-1)*$pageSize+$pageSize ? $count : ($pageNum-1)*$pageSize+$pageSize;
+        for ($i=($pageNum-1)*$pageSize; $i<$maxbooks ; $i++) { 
             eml_aff_livre($livres[$i]);
         }
     }
