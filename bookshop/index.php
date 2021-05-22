@@ -5,7 +5,7 @@ session_start();
 
 
 require_once './php/bibli_generale.php';
-require_once ('./php/bibli_bookshop.php');
+require_once './php/bibli_bookshop.php';
 
 error_reporting(E_ALL); // toutes les erreurs sont capturées (utile lors de la phase de développement)
 
