@@ -8,9 +8,9 @@
 /** Constantes : les paramètres de connexion au serveur MySQL */
 define ('BD_SERVER', 'localhost');
 
-define ('BD_NAME', 'bookshop_db');
-define ('BD_USER', 'bookshop_user');
-define ('BD_PASS', 'bookshop_pass');
+define ('BD_NAME', 'degieux_bookshop');
+define ('BD_USER', 'degieux_u');
+define ('BD_PASS', 'degieux_p');
 
 /*define ('BD_NAME', 'merlet_bookshop');
 define ('BD_USER', 'merlet_u');
@@ -24,6 +24,11 @@ define('LMIN_PASSWORD', 4);
 define('LMAX_PASSWORD', 20);
 
 define('NB_ANNEE_DATE_NAISSANCE', 120);
+
+define('LMAX_VILLE',50);
+define('LMAX_CP',5);
+define('LMAX_ADRESSE',100);
+define('LMAX_PAYS',50);
  
 
 /**
