@@ -21,7 +21,7 @@ if (!em_est_authentifie()){
 em_aff_debut('Bookshop | Ma liste de Cadeaux','../styles/bookshop.css', 'main');
 
 em_aff_enseigne_entete();
-
+check_update();
 ng_aff_liste();
 
 em_aff_pied();
@@ -30,5 +30,12 @@ em_aff_fin('main');
 ob_flush();
 
 function ng_aff_liste(){
-    //TODO
+    echo '<h2> Votre liste de cadeaux</h2>';
+    $_SESSION['wishlist'] = ng_get_wishlist($_SESSION['id']);
+    if(!isset($_SESSION['wishlist'][0])){
+        echo '<p>Votre liste de cadeaux est vide...</p>';
+    }
+    foreach ($_SESSION['wishlist'] as $livre) {
+        ng_aff_livre($livre,1);
+    }
 }
