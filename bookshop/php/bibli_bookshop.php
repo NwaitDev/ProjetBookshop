@@ -164,9 +164,13 @@ function check_update($DEBUG = FALSE){
     if(array_key_exists('rmFromCart',$_POST)){
         ng_cart_update(2,$DEBUG);
     }
-    if(array_key_exists('cartreset',$_POST)){
-        ng_cart_update(2,$DEBUG);
+    if(array_key_exists('cartupdate',$_POST)){
+        ng_cart_update(3,$DEBUG);
     }
+    if(array_key_exists('cartreset',$_POST)){
+        ng_cart_update(4,$DEBUG);
+    }
+    
 }
 
 /**
@@ -194,38 +198,50 @@ function ng_wishlist_update($type){
  * @param int $type :
  *  1 pour ajouter l'id de $_POST['valeurID'] à la wishlist du client
  *  2 pour supprimer l'id de $_POST['valeurID'] de la wishlist du client
+ *  3 pour mettre à jour la quantité de chaque id à la valeur de $_POST['qte(id)']
+ *  autre nombre pour n'effectuer aucune de ces actions
  */
 function ng_cart_update($type, $DEBUG){
-    if(array_key_exists('addToCart',$_POST)){
-        if (!isset( $_SESSION['cart'])) {
-            $_SESSION['cart']=array();
-        }
+    if (!isset( $_SESSION['cart'])) {
+        $_SESSION['cart']=array();
+    }
+    if($type==1 || $type == 2){
         $iddulivre= $_POST['valeurID'];
         if($type == 1){
-            $_SESSION['cart'][]=$iddulivre;
-        }else{
-            for($i=cont($_SESSION['cart']); $i>=0; --$i){
-                if ($_SESSION['cart'][$i]==$iddulivre) {
-                    array_splice($_SESSION['cart'],$i,1);
-                    break;
-                }
+            if(!isset($_SESSION['cart'][$iddulivre])){
+                $_SESSION['cart'][$iddulivre]=0;
+            }
+            $_SESSION['cart'][$iddulivre]+=1;
+        }
+        if($type==2){
+            $_SESSION['cart'][$iddulivre]-=1;
+            if($_SESSION['cart'][$iddulivre]==0){
+                unset($_SESSION['cart'][$iddulivre]);
             }
         }
     }
-    if ($DEBUG) {
-        if(array_key_exists('cartreset',$_POST)){
-            for($i=count($_SESSION['cart']);$i>=0;--$i){
-                array_pop($_SESSION['cart']);
+    if($type==3){
+        foreach($_POST as $id => $qte){
+            if(is_numeric($id)){
+                $_SESSION['cart'][$id]=$qte;
             }
         }
-        ////////////////////
-        echo '<p>panier : </p>';
-        var_dump($_SESSION['cart']);
-        var_dump($_POST);
-        echo '<form action="" method="POST">',
-            '<input title="Reset_Cart" type="submit" name="cartreset" value="Réinitialiser le panier">',
-            '</form>';
-        ///////////////////
+    }
+    if(array_key_exists('cartreset',$_POST)){
+        for($i=count($_SESSION['cart']);$i>=0;--$i){
+            array_pop($_SESSION['cart']);
+        }
+    }
+    if($DEBUG){
+    ////////////////////
+    echo '<p>panier : </p>';
+    var_dump($_SESSION['cart']);
+    echo '<p>post:</p>';
+    var_dump($_POST);
+    echo '<form action="" method="POST">',
+        '<input title="Reset_Cart" type="submit" name="cartreset" value="Réinitialiser le panier">',
+        '</form>';
+    ///////////////////
     }
 }
 
