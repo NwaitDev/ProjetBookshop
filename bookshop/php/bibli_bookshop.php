@@ -102,9 +102,9 @@ function em_aff_pied() {
     echo 
         '<footer>', 
             'BookShop &amp; Partners &copy; ', date('Y'), ' - ',
-            '<a href="apropos.html">A propos</a> - ',
-            '<a href="confident.html">Emplois @ BookShop</a> - ',
-            '<a href="conditions.html">Conditions d\'utilisation</a>',
+            '<a href="lorem_ipsum.php">A propos</a> - ',
+            '<a href="lorem_ipsum.php">Emplois @ BookShop</a> - ',
+            '<a href="lorem_ipsum.php">Conditions d\'utilisation</a>',
         '</footer>';
 }
 
@@ -224,6 +224,9 @@ function ng_cart_update($type, $DEBUG){
         foreach($_POST as $id => $qte){
             if(is_numeric($id)){
                 $_SESSION['cart'][$id]=$qte;
+                if($_SESSION['cart'][$id]==0){
+                    unset($_SESSION['cart'][$id]);
+                }
             }
         }
     }
