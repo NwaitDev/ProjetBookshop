@@ -12,7 +12,7 @@ em_aff_debut('BookShop | Détail du livre', '../styles/bookshop.css', 'main');
 
 em_aff_enseigne_entete();
 
-check_update(TRUE);
+check_update();
 
 ng_aff_contenu();
 
