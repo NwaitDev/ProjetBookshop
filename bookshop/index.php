@@ -14,8 +14,8 @@ em_aff_debut('BookShop | Bienvenue', './styles/bookshop.css', 'main');
 em_aff_enseigne_entete('./');
 
 eml_aff_contenu();
-
-check_update();
+$err = array();
+check_update($err);
 
 em_aff_pied();
 

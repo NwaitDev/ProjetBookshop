@@ -59,10 +59,10 @@ if ($_GET){ // s'il y a des paramètres dans l'URL
 em_aff_debut('BookShop | Recherche', '../styles/bookshop.css', 'main');
 
 em_aff_enseigne_entete();
+$err = array();
+check_update($err);
 
-check_update();
-
-ng_aff_contenu($recherche, $erreurs, $pageNum, 7);
+ng_aff_contenu($recherche, $err, $pageNum, 7);
 $nbPages = isset($_SESSION['nbpages']) ? $_SESSION['nbpages'] : 1;
 if ($_GET) {
     ng_page_bar($nbPages,isset($_GET['page']) ? $_GET['page'] : 1, 5);

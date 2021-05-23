@@ -21,7 +21,9 @@ if (!em_est_authentifie()){
 em_aff_debut('Bookshop | Ma liste de Cadeaux','../styles/bookshop.css', 'main');
 
 em_aff_enseigne_entete();
-check_update();
+
+$err = array();
+check_update($err);
 ng_aff_liste();
 
 em_aff_pied();

@@ -11,8 +11,8 @@ error_reporting(E_ALL); // toutes les erreurs sont capturées (utile lors de la 
 em_aff_debut('BookShop | Détail du livre', '../styles/bookshop.css', 'main');
 
 em_aff_enseigne_entete();
-
-check_update();
+$err = array();
+check_update($err);
 
 ng_aff_contenu();
 

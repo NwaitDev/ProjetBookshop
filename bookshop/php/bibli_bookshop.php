@@ -152,7 +152,7 @@ function em_session_exit($page = '../index.php') {
     exit();
 }
 
-function check_update($err,$DEBUG = FALSE){
+function check_update(&$err,$DEBUG = FALSE){
     if (array_key_exists('addToWhishList',$_POST)) {
         ng_wishlist_update(1);
     }
@@ -387,7 +387,7 @@ function ng_aff_livre($livre, $option = 0) {
         '</article>';
 }
 
-function ng_passer_commande($err){
+function ng_passer_commande(&$err){
     if(em_est_authentifie()){
         $bd = em_bd_connecter();
         $sql = 'SELECT cliID, cliAdresse, cliVille, cliPays, cliCP FROM clients WHERE cliID = '.$_SESSION['id'].';';
@@ -395,7 +395,7 @@ function ng_passer_commande($err){
         $row = array();
         if($row = mysqli_fetch_assoc($res)){
             foreach ($row as $value) {
-                if(!isset($value)){
+                if($value==''){
                     mysqli_free_result($res);
                     mysqli_close($bd);
                     $err[]='Avant de commander, veuillez renseigner votre adresse postale <a href="compte.php">ici</a>';
@@ -420,7 +420,6 @@ function ng_passer_commande($err){
         }
     }else{
         $err[]='Avant de commander, veuillez vous connecter <a href="login.php">ici</a>';
-        exit;
     }
 }
 
