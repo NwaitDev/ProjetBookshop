@@ -31,6 +31,7 @@ define('LMAX_ADRESSE',100);
 define('LMAX_PAYS',50);
  
 
+
 /**
  *  Fonction affichant l'enseigne et le bloc entête avec le menu de navigation.
  *
@@ -151,7 +152,7 @@ function em_session_exit($page = '../index.php') {
     exit();
 }
 
-function check_update($DEBUG = FALSE){
+function check_update($err,$DEBUG = FALSE){
     if (array_key_exists('addToWhishList',$_POST)) {
         ng_wishlist_update(1);
     }
@@ -169,6 +170,10 @@ function check_update($DEBUG = FALSE){
     }
     if(array_key_exists('cartreset',$_POST)){
         ng_cart_update(4,$DEBUG);
+    }
+    if(array_key_exists('btnCommander',$_POST)){
+        ng_cart_update(3,$DEBUG);
+        ng_passer_commande($err);
     }
     
 }
@@ -380,6 +385,43 @@ function ng_aff_livre($livre, $option = 0) {
             'ISBN13 : ', $livre['ISBN13'],
             '</form>',
         '</article>';
+}
+
+function ng_passer_commande($err){
+    if(em_est_authentifie()){
+        $bd = em_bd_connecter();
+        $sql = 'SELECT cliID, cliAdresse, cliVille, cliPays, cliCP FROM clients WHERE cliID = '.$_SESSION['id'].';';
+        $res = mysqli_query($bd,$sql);
+        $row = array();
+        if($row = mysqli_fetch_assoc($res)){
+            foreach ($row as $value) {
+                if(!isset($value)){
+                    mysqli_free_result($res);
+                    mysqli_close($bd);
+                    $err[]='Avant de commander, veuillez renseigner votre adresse postale <a href="compte.php">ici</a>';
+                    break;
+                }
+            }
+            if(count($err)==0){
+                mysqli_free_result($res);
+                $sql = 'INSERT INTO commandes(coIDClient,coDate,coHeure) VALUES ('.$row['cliID'].','.date("Ymd").','.date("hi").');';
+                mysqli_query($bd,$sql) or em_bd_erreur($bd,$sql);
+                $idcommande = mysqli_insert_id($bd);
+                foreach ($_SESSION['cart'] as $id => $qte) {
+                    $sql = 'INSERT INTO compo_commande(ccIDLivre,ccIDCommande,ccQuantite) VALUES ('.$id.', '.$idcommande.', '.$qte.');';
+                    mysqli_query($bd,$sql) or em_bd_erreur($bd,$sql);
+                }
+                mysqli_close($bd);
+                echo '<p>Votre commande a bien été enregistrée</p>';
+                for($i=count($_SESSION['cart']);$i>=0;--$i){
+                    array_pop($_SESSION['cart']);
+                }
+            }
+        }
+    }else{
+        $err[]='Avant de commander, veuillez vous connecter <a href="login.php">ici</a>';
+        exit;
+    }
 }
 
 ?>
