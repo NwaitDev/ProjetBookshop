@@ -629,6 +629,18 @@ form td:first-child {
     text-align: right;
 }
 
+form table.cart tr:first-child td {
+    text-align: left;
+    border-bottom: solid black;
+    border-top: solid black;
+}
+
+form table.cart tr:not(:last-child) td {
+    text-align: left;
+    border-left: solid black;
+    border-right: solid black;
+}
+
 form tr:last-child td[colspan] {
     text-align: center;
 }
