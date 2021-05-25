@@ -8,7 +8,7 @@
 /** Constantes : les paramètres de connexion au serveur MySQL */
 define ('BD_SERVER', 'localhost');
 
-define ('BD_NAME', 'degieux_bookshop');
+define ('BD_NAME', 'bookshop');
 define ('BD_USER', 'degieux_u');
 define ('BD_PASS', 'degieux_p');
 
@@ -421,6 +421,17 @@ function ng_passer_commande(&$err){
     }else{
         $err[]='Avant de commander, veuillez vous connecter <a href="login.php">ici</a>';
     }
+}
+
+function td_int_to_heure($heure){
+    $minute = $heure%100<10 ? '0'.$heure%100 : $heure%100;
+    $res = array( 'heure' => (int)($heure/100), 'minute' => $minute);
+    return $res;
+}
+
+function td_int_to_date($date){
+    $res = array( 'annee' => (int)($date/10000), 'mois' => ($date/100)%100 ,'jour' => $date%100);
+    return $res;
 }
 
 ?>

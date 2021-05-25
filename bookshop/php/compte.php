@@ -70,6 +70,8 @@ function eml_aff_contenu($err, $bd) {
     $pays = $userData['cliPays'];
 
     echo '<h1>Profil utilisateur</h1>';
+
+    echo '<p>Pour consulter votre historique de commande, consultez ce <a href="historique.php" title="Voir détails">lien</a>.</p>';
         
     if (count($err) > 0) {
         echo '<p class="error">Votre inscription n\'a pas pu être réalisée à cause des erreurs suivantes : ';
@@ -78,7 +80,7 @@ function eml_aff_contenu($err, $bd) {
         }
         echo '</p>';    
     }
-    
+
     echo    
         '<p>Pour modifier votre compte veuillez remplir ce formulaire : </p>',
         '<form method="post" action="inscription.php">',
@@ -327,11 +329,14 @@ function eml_traitement_inscription($bd) {
                 cliPays = '$pays'
             WHERE cliID = '$id'";
             
-    mysqli_query($bd, $sql) or em_bd_erreur($bd, $sql);
-    
+    $res = mysqli_query($bd, $sql) or em_bd_erreur($bd, $sql);
+    if($res){
+        mysqli_close($bd);
+        header("Location: compte.php");
+        exit();
+    }
     // libération des ressources
     mysqli_close($bd);
-
     // redirection vers la page précédente
     $addr = 'compte.php';
     header("Location: $addr");

@@ -147,6 +147,7 @@ function ng_traitement_connexion($erreurs){
     }
     
     // redirection vers la page précédente ou vers index.php
+    $addr = $_SERVER['HTTP_REFERER'];
     header("Location: $addr");
     exit();
 
